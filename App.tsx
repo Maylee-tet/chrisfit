@@ -16,7 +16,6 @@ const App: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
 
   const fetchProducts = useCallback(async () => {
     setIsLoading(true);
@@ -57,20 +56,6 @@ const App: React.FC = () => {
     fetchProducts();
   }, [fetchProducts]);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUserId(data.session?.user?.id ?? null);
-    });
-
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUserId(session?.user?.id ?? null);
-    });
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
-
   const uploadImages = async (productId: string, files: File[]) => {
     const uploadedUrls: string[] = [];
 
@@ -91,12 +76,7 @@ const App: React.FC = () => {
     return uploadedUrls;
   };
 
-  const syncProductImages = async (
-    productId: string,
-    existingImages: string[],
-    newImages: File[],
-    userId: string
-  ) => {
+  const syncProductImages = async (productId: string, existingImages: string[], newImages: File[]) => {
     const uploadedUrls = newImages.length > 0 ? await uploadImages(productId, newImages) : [];
     const allImages = [...existingImages, ...uploadedUrls].slice(0, MAX_IMAGES);
 
@@ -113,8 +93,7 @@ const App: React.FC = () => {
       const payload = allImages.map((url, index) => ({
         product_id: productId,
         url,
-        position: index + 1,
-        user_id: userId
+        position: index + 1
       }));
 
       const { error: insertError } = await supabase.from('product_images').insert(payload);
@@ -141,8 +120,7 @@ const App: React.FC = () => {
         name: payload.name,
         price: payload.price,
         sizes: payload.sizes,
-        observation: payload.observation ?? null,
-        user_id: user.id
+        observation: payload.observation ?? null
       })
       .select('id')
       .single();
@@ -151,7 +129,7 @@ const App: React.FC = () => {
       throw new Error(insertError.message);
     }
 
-    await syncProductImages(data.id, payload.existingImages, payload.newImages, user.id);
+    await syncProductImages(data.id, payload.existingImages, payload.newImages);
     await fetchProducts();
   };
 
@@ -180,7 +158,7 @@ const App: React.FC = () => {
       throw new Error(updateError.message);
     }
 
-    await syncProductImages(payload.id, payload.existingImages, payload.newImages, user.id);
+    await syncProductImages(payload.id, payload.existingImages, payload.newImages);
     await fetchProducts();
   };
 
