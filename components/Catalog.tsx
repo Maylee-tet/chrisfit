@@ -27,11 +27,10 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
     () => products.filter((product) => product.isFeatured),
     [products]
   );
-  const featuredDisplay = useMemo(() => featuredProducts.slice(0, 4), [featuredProducts]);
+  const featuredDisplay = useMemo(() => featuredProducts.slice(0, 10), [featuredProducts]);
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const hasFeatured = featuredProducts.length > 0;
   const modalImages = activeModal?.product.images?.filter((image): image is string => Boolean(image)) ?? [];
-  const featuredStack = useMemo(() => featuredProducts.slice(0, 5), [featuredProducts]);
   const featuredLayers = useMemo(() => {
     if (!featuredDisplay.length) return [];
     return featuredDisplay.map((_, offset) => featuredDisplay[(activeFeaturedIndex + offset) % featuredDisplay.length]);
@@ -113,15 +112,16 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                   )}
                 </div>
 
-                <div className="relative min-h-[340px] flex items-start justify-center lg:justify-end">
-                  <div className="relative w-full max-w-xl">
+                <div className="relative min-h-[360px] flex items-start justify-center lg:justify-start">
+                  <div className="relative w-full max-w-2xl overflow-visible">
                     {featuredLayers.map((product, index) => {
                       const featuredImage = product.images?.find((image): image is string => Boolean(image));
                       const depth = index;
-                      const widthOffset = depth * 70;
-                      const translateX = depth * -26;
-                      const translateY = depth * 28;
                       const isActive = index === 0;
+                      const widthOffset = depth * 85;
+                      const translateX = depth * 55;
+                      const translateY = depth * 26 + (isActive ? -28 : 0);
+                      const scale = isActive ? 1.04 : Math.max(0.68, 0.98 - depth * 0.06);
                       return (
                         <button
                           key={`${product.id}-stack-${index}`}
@@ -133,10 +133,10 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                           }}
                           className={`absolute top-0 left-0 w-full text-[#0f1c2e] shadow-2xl overflow-hidden border border-white/40 transition-all duration-700 ${
                             isActive ? 'bg-white/95' : 'bg-[#d5d9df]/70'
-                          }`}
+                          } ${!isActive ? 'hidden md:block' : ''}`}
                           style={{
                             width: `calc(100% - ${widthOffset}px)`,
-                            transform: `translate(${translateX}px, ${translateY}px)`,
+                            transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
                             zIndex: featuredLayers.length - index
                           }}
                         >
