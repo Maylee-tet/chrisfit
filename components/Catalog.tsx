@@ -122,6 +122,10 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                       const translateY = depth * 24;
                       const scale = Math.max(0.68, 1 - depth * 0.06);
                       const isActive = index === 0;
+                      const widthOffset = depth * 85;
+                      const translateX = depth * 55;
+                      const translateY = depth * 26 + (isActive ? -28 : 0);
+                      const scale = isActive ? 1.04 : Math.max(0.68, 0.98 - depth * 0.06);
                       return (
                         <button
                           key={`${product.id}-stack-${index}`}
