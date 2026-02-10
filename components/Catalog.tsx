@@ -97,12 +97,12 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
             >
               {/* 3 COLUNAS SIMPLES */}
               <div className="flex h-full">
-                {/* COLUNA 1: TEXTO */}
+                {/* COLUNA 1: TEXTO - sempre mostra info do item ativo */}
                 <div className="w-1/3 flex flex-col justify-center items-end px-10 text-right">
                   <p className="uppercase tracking-[0.4em] text-xs text-white/90 mb-6">destaques</p>
 
                   {featuredDisplay[activeFeaturedIndex] && (
-                    <div className="flex flex-col items-end gap-3">
+                    <div className="flex flex-col items-end gap-3 transition-opacity duration-500">
                       {/* Preço */}
                       <div className="flex flex-col items-end">
                         {featuredDisplay[activeFeaturedIndex].isPromo &&
@@ -138,9 +138,10 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                 </div>
 
                 {/* COLUNA 2: IMAGEM ATIVA */}
-                <div className="w-1/3 flex items-center justify-center">
+                <div className="w-1/3 flex items-center justify-center overflow-hidden">
                   {featuredDisplay[activeFeaturedIndex] && (
                     <button
+                      key={`active-${featuredDisplay[activeFeaturedIndex].id}`}
                       type="button"
                       onClick={() => {
                         const activeImage = featuredDisplay[activeFeaturedIndex].images?.find(
@@ -159,43 +160,57 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                           ) ?? ''
                         }
                         alt={featuredDisplay[activeFeaturedIndex].name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-all duration-500"
                       />
                     </button>
                   )}
                 </div>
 
-                {/* COLUNA 3: PRÓXIMAS IMAGENS (sem a ativa) */}
-                <div className="w-1/3 flex">
-                  {featuredDisplay.length > 1 &&
-                    featuredDisplay
-                      .slice(1)
-                      .map((product, index) => {
-                        const image = product.images?.find((img): img is string => Boolean(img));
-                        if (!image) return null;
+                {/* COLUNA 3: FILA DE IMAGENS (próximas + ativa no final) */}
+                <div className="w-1/3 flex overflow-hidden">
+                  <div
+                    className="flex h-full transition-transform duration-500 ease-in-out"
+                    style={{
+                      width: `${featuredDisplay.length > 1 ? (featuredDisplay.length - 1) * 100 : 100}%`
+                    }}
+                  >
+                    {featuredDisplay.length > 1 &&
+                      // Cria array circular: [próximas imagens] + [imagem ativa no final]
+                      [...featuredDisplay.slice(1), featuredDisplay[0]]
+                        .map((product, index) => {
+                          const image = product.images?.find((img): img is string => Boolean(img));
+                          if (!image) return null;
 
-                        return (
-                          <button
-                            key={`${product.id}-next-${index}`}
-                            type="button"
-                            onClick={() => {
-                              const targetIndex = featuredDisplay.findIndex((p) => p.id === product.id);
-                              if (targetIndex >= 0) {
-                                setActiveFeaturedIndex(targetIndex);
-                              }
-                            }}
-                            className="flex-1 h-full relative"
-                          >
-                            <img
-                              src={image}
-                              alt={product.name}
-                              className="w-full h-full object-cover"
-                            />
-                            {/* 50% opacidade */}
-                            <div className="absolute inset-0 bg-black/50" />
-                          </button>
-                        );
-                      })}
+                          const isActive = product.id === featuredDisplay[activeFeaturedIndex].id;
+
+                          return (
+                            <button
+                              key={`queue-${product.id}-${index}`}
+                              type="button"
+                              onClick={() => {
+                                const targetIndex = featuredDisplay.findIndex((p) => p.id === product.id);
+                                if (targetIndex >= 0) {
+                                  setActiveFeaturedIndex(targetIndex);
+                                }
+                              }}
+                              className="flex-shrink-0 h-full relative transition-all duration-500"
+                              style={{
+                                width: `${100 / (featuredDisplay.length - 1)}%`
+                              }}
+                            >
+                              <img
+                                src={image}
+                                alt={product.name}
+                                className="w-full h-full object-cover"
+                              />
+                              {/* 50% opacidade apenas para as não-ativas */}
+                              <div className={`absolute inset-0 transition-opacity duration-500 ${
+                                isActive ? 'bg-black/50' : 'bg-black/50'
+                              }`} />
+                            </button>
+                          );
+                        })}
+                  </div>
                 </div>
               </div>
 
@@ -207,7 +222,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                       key={`${product.id}-dot-${index}`}
                       type="button"
                       onClick={() => setActiveFeaturedIndex(index)}
-                      className={`h-1 transition-all ${
+                      className={`h-1 transition-all duration-300 ${
                         index === activeFeaturedIndex
                           ? 'bg-white w-6'
                           : 'bg-white/50 hover:bg-white/70 w-4'
