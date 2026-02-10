@@ -137,68 +137,69 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                   )}
                 </div>
 
-                {/* COLUNA 2: IMAGEM ATIVA */}
-                <div className="w-1/3 flex items-center justify-center overflow-hidden">
-                  <div className="w-full h-full relative">
-                    {featuredDisplay.map((product, idx) => {
+                {/* COLUNA 2: IMAGEM ATIVA - usa featuredLayers[0] */}
+                <div className="w-1/3 flex items-center justify-center">
+                  {featuredLayers[0] && activeFeaturedImage && (
+                    <button
+                      type="button"
+                      onClick={() => openModal(featuredLayers[0], activeFeaturedImage)}
+                      className="w-full h-full"
+                    >
+                      <img
+                        key={`active-${featuredLayers[0].id}`}
+                        src={activeFeaturedImage}
+                        alt={featuredLayers[0].name}
+                        className="w-full h-full object-cover transition-all duration-500"
+                      />
+                    </button>
+                  )}
+                </div>
+
+                {/* COLUNA 3: FILA HORIZONTAL - slides para esquerda */}
+                <div className="w-1/3 overflow-hidden">
+                  <div
+                    className="flex h-full transition-transform duration-500 ease-out"
+                    style={{
+                      width: `${featuredDisplay.length * 100}%`,
+                      transform: `translateX(-${activeFeaturedIndex * (100 / featuredDisplay.length)}%)`
+                    }}
+                  >
+                    {/* Renderiza TODOS os produtos + duplica o primeiro no final para loop infinito */}
+                    {[...featuredDisplay, ...featuredDisplay.slice(0, 1)].map((product, absoluteIndex) => {
                       const image = product.images?.find((img): img is string => Boolean(img));
                       if (!image) return null;
 
-                      const isActive = idx === activeFeaturedIndex;
+                      const isActiveInCenter = absoluteIndex === activeFeaturedIndex;
 
                       return (
-                        <button
-                          key={`center-${product.id}`}
-                          type="button"
-                          onClick={() => {
-                            if (isActive) {
-                              openModal(product, image);
-                            }
-                          }}
-                          className="absolute inset-0 w-full h-full transition-opacity duration-500"
+                        <div
+                          key={`queue-${product.id}-${absoluteIndex}`}
+                          className="flex-shrink-0 h-full"
                           style={{
-                            opacity: isActive ? 1 : 0,
-                            pointerEvents: isActive ? 'auto' : 'none',
-                            zIndex: isActive ? 1 : 0
+                            width: `${100 / (featuredDisplay.length + 1)}%`,
+                            opacity: isActiveInCenter ? 0 : 1
                           }}
                         >
-                          <img
-                            src={image}
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const targetIndex = absoluteIndex % featuredDisplay.length;
+                              setActiveFeaturedIndex(targetIndex);
+                            }}
+                            className="w-full h-full relative"
+                          >
+                            <img
+                              src={image}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                            />
+                            {/* 50% opacidade */}
+                            <div className="absolute inset-0 bg-black/50" />
+                          </button>
+                        </div>
                       );
                     })}
                   </div>
-                </div>
-
-                {/* COLUNA 3: FILA DE IMAGENS */}
-                <div className="w-1/3 flex">
-                  {featuredDisplay.map((product, idx) => {
-                    const image = product.images?.find((img): img is string => Boolean(img));
-                    if (!image) return null;
-
-                    // Não mostra a imagem ativa na fila
-                    if (idx === activeFeaturedIndex) return null;
-
-                    return (
-                      <button
-                        key={`queue-${product.id}`}
-                        type="button"
-                        onClick={() => setActiveFeaturedIndex(idx)}
-                        className="flex-1 h-full relative transition-all duration-500"
-                      >
-                        <img
-                          src={image}
-                          alt={product.name}
-                          className="w-full h-full object-cover transition-all duration-500"
-                        />
-                        {/* 50% opacidade */}
-                        <div className="absolute inset-0 bg-black/50 transition-opacity duration-500" />
-                      </button>
-                    );
-                  })}
                 </div>
               </div>
 
