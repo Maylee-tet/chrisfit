@@ -86,160 +86,149 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
 
   return (
     <div className="animate-in fade-in duration-700">
-      {/* ===== BLUE TOP (seamless with header) ===== */}
       <section className="text-white" id="destaques">
-        {/* Full-width blue background that merges with the header */}
         <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[#2aa7df]">
-          {/* "DESTAQUES" label inside the blue area, above the strip */}
-          <div className="relative z-10 px-6 md:px-14 pt-10 pb-4">
+          {/* Label DESTAQUES acima da faixa */}
+          <div className="relative z-10 px-6 md:px-14 pt-10 pb-8">
             <p className="uppercase tracking-[0.4em] text-xs text-white/80">destaques</p>
           </div>
 
           {hasFeatured ? (
             <div
-              className="relative w-full bg-[#2aa7df] shadow-[0_-10px_25px_rgba(0,0,0,0.2),0_16px_30px_rgba(0,0,0,0.25)]"
+              className="relative w-full h-[360px] bg-[#2aa7df] shadow-[0_-10px_25px_rgba(0,0,0,0.2),0_16px_30px_rgba(0,0,0,0.25)] overflow-visible"
               onMouseEnter={() => setIsCarouselPaused(true)}
               onMouseLeave={() => setIsCarouselPaused(false)}
             >
-              <div className="relative flex flex-col lg:h-[360px] lg:flex-row">
-                {/* Coluna esquerda - texto (paralelogramo que sangra até a borda esquerda) */}
-                <div
-                  className="relative flex flex-col justify-center px-6 py-10 text-right sm:px-10 lg:w-1/3 lg:py-0 z-10"
-                  style={{
-                    clipPath: `polygon(0 0, 100% 0, calc(100% - ${skewOffset}) 100%, 0 100%)`,
-                    WebkitClipPath: `polygon(0 0, 100% 0, calc(100% - ${skewOffset}) 100%, 0 100%)`
-                  }}
-                >
-                  <span className="absolute right-8 top-6 text-[10px] font-bold uppercase tracking-[0.25em] text-white/90">
-                    destaques
-                  </span>
-                  {featuredLayers[0] && (
-                    <div className="mt-12 flex w-full flex-col items-end gap-4">
-                        <div className="flex h-[60px] flex-col items-end gap-1">
-                          {featuredLayers[0].isPromo && featuredLayers[0].promoPrice ? (
-                            <>
-                              <span className="text-sm text-white/60 line-through whitespace-nowrap">
-                                {formatCurrency(featuredLayers[0].price)}
-                              </span>
-                              <span className="text-4xl font-bold leading-none whitespace-nowrap">
-                                {formatCurrency(featuredLayers[0].promoPrice)}
-                              </span>
-                            </>
-                          ) : (
-                            <span className="text-4xl font-bold leading-none whitespace-nowrap">
+              {/* Coluna ESQUERDA - Texto (1/3 na base) */}
+              <div
+                className="absolute top-0 bottom-0 flex flex-col justify-center px-8 text-right z-10"
+                style={{
+                  left: 0,
+                  width: 'calc(33.33% + 96px)',
+                  clipPath: 'polygon(96px 0, 100% 0, calc(100% - 96px) 100%, 0 100%)',
+                  WebkitClipPath: 'polygon(96px 0, 100% 0, calc(100% - 96px) 100%, 0 100%)'
+                }}
+              >
+                {featuredLayers[0] && (
+                  <>
+                    <div className="flex flex-col items-end gap-4 pr-8">
+                      <div className="flex flex-col items-end gap-1">
+                        {featuredLayers[0].isPromo && featuredLayers[0].promoPrice ? (
+                          <>
+                            <span className="text-sm text-white/60 line-through whitespace-nowrap">
                               {formatCurrency(featuredLayers[0].price)}
                             </span>
-                          )}
-                        </div>
-                        <div className="flex h-[70px] w-full items-center justify-end">
-                          <span
-                            className="text-right text-xl font-light tracking-[0.4em] text-white"
-                            style={{
-                              display: '-webkit-box',
-                              WebkitLineClamp: 2,
-                              WebkitBoxOrient: 'vertical',
-                              overflow: 'hidden'
-                            }}
-                          >
-                            {featuredLayers[0].name}
+                            <span className="text-4xl font-bold leading-none whitespace-nowrap">
+                              {formatCurrency(featuredLayers[0].promoPrice)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-4xl font-bold leading-none whitespace-nowrap">
+                            {formatCurrency(featuredLayers[0].price)}
                           </span>
-                        </div>
-                        {featuredLayers[0].sizes.length > 0 && (
-                          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-white/90 whitespace-nowrap">
-                            Tamanhos: {featuredLayers[0].sizes.join(' • ')}
-                          </div>
                         )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Coluna central - imagem ativa (maior, vaza para cima, z-index alto) */}
-                <div className="relative h-72 sm:h-80 md:h-96 lg:h-full lg:w-1/3 px-6 sm:px-10">
-                  <div className="relative flex h-full w-full flex-col justify-end">
-                    {featuredLayers[0] && activeFeaturedImage && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          openModal(featuredLayers[0], activeFeaturedImage);
-                        }}
-                        className="group absolute left-0 right-0 mx-auto z-30"
-                        style={{
-                          top: '-80px',
-                          width: '110%',
-                          height: '480px'
-                        }}
-                      >
-                        <div
-                          className="relative h-full w-full overflow-hidden"
-                          style={{
-                            clipPath: `polygon(${skewOffset} 0, calc(100% - ${skewOffset}) 0, calc(100% - ${skewOffset} - ${skewOffset}) 100%, ${skewOffset} 100%)`,
-                            WebkitClipPath: `polygon(${skewOffset} 0, calc(100% - ${skewOffset}) 0, calc(100% - ${skewOffset} - ${skewOffset}) 100%, ${skewOffset} 100%)`
-                          }}
-                        >
-                          <img
-                            src={activeFeaturedImage}
-                            alt={featuredLayers[0].name}
-                            className="h-full w-full object-cover shadow-[0_10px_40px_rgba(0,0,0,0.4)] transition-transform duration-500 group-hover:scale-[1.02]"
-                            loading="lazy"
-                          />
+                      </div>
+                      <span className="text-xl font-light tracking-[0.4em] text-white">
+                        {featuredLayers[0].name}
+                      </span>
+                      {featuredLayers[0].sizes.length > 0 && (
+                        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-white/90 whitespace-nowrap">
+                          Tamanhos: {featuredLayers[0].sizes.join(' • ')}
                         </div>
-                      </button>
-                    )}
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
 
-                    {/* Dots do carrossel - dentro da faixa, abaixo da imagem ativa */}
-                    <div className="relative z-20 flex items-center justify-center gap-2 pb-6">
-                      {featuredDisplay.map((product, index) => (
-                        <button
-                          key={`${product.id}-nav-${index}`}
-                          type="button"
-                          onClick={() => setActiveFeaturedIndex(index)}
-                          className={`h-[5px] w-4 skew-x-[-15deg] transition-all ${
-                            index === activeFeaturedIndex ? 'bg-white/80 w-[22px]' : 'bg-white/25 hover:bg-white/40'
-                          }`}
-                          aria-label={`Ir para ${product.name}`}
+              {/* Coluna CENTRAL - Imagem ativa (1/3 na base, vaza para cima) */}
+              <div
+                className="absolute z-30"
+                style={{
+                  left: 'calc(33.33% - 48px)',
+                  width: 'calc(33.33% + 96px)',
+                  top: '-80px',
+                  height: '480px'
+                }}
+              >
+                {featuredLayers[0] && activeFeaturedImage && (
+                  <button
+                    type="button"
+                    onClick={() => openModal(featuredLayers[0], activeFeaturedImage)}
+                    className="group w-full h-full"
+                  >
+                    <div
+                      className="w-full h-full overflow-hidden"
+                      style={{
+                        clipPath: 'polygon(48px 0, calc(100% - 48px) 0, calc(100% - 96px) 100%, 48px 100%)',
+                        WebkitClipPath: 'polygon(48px 0, calc(100% - 48px) 0, calc(100% - 96px) 100%, 48px 100%)'
+                      }}
+                    >
+                      <img
+                        src={activeFeaturedImage}
+                        alt={featuredLayers[0].name}
+                        className="w-full h-full object-cover shadow-[0_10px_40px_rgba(0,0,0,0.4)] transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                  </button>
+                )}
+
+                {/* Dots do carrossel - DENTRO da faixa, abaixo da imagem */}
+                <div className="absolute bottom-[-300px] left-0 right-0 flex items-center justify-center gap-2 z-20">
+                  {featuredDisplay.map((product, index) => (
+                    <button
+                      key={`${product.id}-nav-${index}`}
+                      type="button"
+                      onClick={() => setActiveFeaturedIndex(index)}
+                      className={`h-[5px] skew-x-[-15deg] transition-all ${
+                        index === activeFeaturedIndex ? 'bg-white/80 w-[22px]' : 'w-4 bg-white/25 hover:bg-white/40'
+                      }`}
+                      aria-label={`Ir para ${product.name}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Coluna DIREITA - Imagens empilhadas (1/3 na base, topo vaza para fora) */}
+              <div
+                className="absolute top-0 bottom-0 flex flex-col z-10"
+                style={{
+                  left: 'calc(66.66% - 96px)',
+                  width: 'calc(33.33% + 96px)'
+                }}
+              >
+                {sideImages.length > 0 ? (
+                  sideImages.map(({ product, image }, index) => (
+                    <button
+                      key={`${product.id}-stack-${index}`}
+                      type="button"
+                      onClick={() => {
+                        const nextIndex = featuredDisplay.findIndex((item) => item.id === product.id);
+                        if (nextIndex >= 0) setActiveFeaturedIndex(nextIndex);
+                      }}
+                      className="relative flex-1 overflow-hidden"
+                      style={{
+                        clipPath: 'polygon(96px 0, 100% 0, calc(100% - 96px) 100%, 0 100%)',
+                        WebkitClipPath: 'polygon(96px 0, 100% 0, calc(100% - 96px) 100%, 0 100%)'
+                      }}
+                    >
+                      {image && (
+                        <img
+                          src={image}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
                         />
-                      ))}
-                    </div>
+                      )}
+                      <span className="absolute inset-0 bg-black/45 hover:bg-black/30 transition-colors" />
+                    </button>
+                  ))
+                ) : (
+                  <div className="flex h-full items-center justify-center text-white/70">
+                    Sem outras imagens
                   </div>
-
-                </div>
-
-                {/* Coluna direita - imagens empilhadas (paralelogramo, topo vaza para fora) */}
-                <div className="relative hidden h-72 sm:h-80 md:h-96 lg:flex lg:w-1/3 lg:h-full lg:flex-col z-10">
-                  {sideImages.length > 0 ? (
-                    sideImages.map(({ product, image }, index) => (
-                      <button
-                        key={`${product.id}-stack-${index}`}
-                        type="button"
-                        onClick={() => {
-                          const nextIndex = featuredDisplay.findIndex((item) => item.id === product.id);
-                          if (nextIndex >= 0) {
-                            setActiveFeaturedIndex(nextIndex);
-                          }
-                        }}
-                        className="relative flex-1 overflow-hidden"
-                        style={{
-                          clipPath: `polygon(${skewOffset} 0, 100% 0, calc(100% - ${skewOffset}) 100%, 0 100%)`,
-                          WebkitClipPath: `polygon(${skewOffset} 0, 100% 0, calc(100% - ${skewOffset}) 100%, 0 100%)`
-                        }}
-                      >
-                        {image && (
-                          <img
-                            src={image}
-                            alt={product.name}
-                            className="h-full w-full object-cover"
-                            loading="lazy"
-                          />
-                        )}
-                        <span className="absolute inset-0 bg-black/45" />
-                      </button>
-                    ))
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-white/70">
-                      Sem outras imagens
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
             </div>
           ) : (
