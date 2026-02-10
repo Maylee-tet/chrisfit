@@ -30,7 +30,21 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
   const featuredDisplay = useMemo(() => featuredProducts.slice(0, 10), [featuredProducts]);
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const hasFeatured = featuredProducts.length > 0;
+
+  // Detecta mudança no índice e anima
+  useEffect(() => {
+    if (!hasFeatured || featuredDisplay.length <= 1) return;
+
+    setIsAnimating(true);
+
+    const timeout = setTimeout(() => {
+      setIsAnimating(false);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [activeFeaturedIndex, hasFeatured, featuredDisplay.length]);
   const modalImages = activeModal?.product.images?.filter((image): image is string => Boolean(image)) ?? [];
   const featuredLayers = useMemo(() => {
     if (!featuredDisplay.length) return [];
@@ -137,49 +151,106 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                   )}
                 </div>
 
-                {/* COLUNA 2: IMAGEM ATIVA */}
-                <div className="w-1/3 flex items-center justify-center">
-                  {featuredLayers[0] && activeFeaturedImage && (
+                {/* COLUNA 2: IMAGEM ATIVA - próxima desliza por cima */}
+                <div className="w-1/3 relative overflow-hidden">
+                  {/* Imagem atual - PARADA */}
+                  {featuredLayers[0] && (
                     <button
                       type="button"
-                      onClick={() => openModal(featuredLayers[0], activeFeaturedImage)}
-                      className="w-full h-full"
+                      onClick={() => {
+                        const img = featuredLayers[0].images?.find((i): i is string => Boolean(i));
+                        if (img) openModal(featuredLayers[0], img);
+                      }}
+                      className="absolute inset-0 w-full h-full"
+                      style={{ zIndex: 1 }}
                     >
                       <img
-                        src={activeFeaturedImage}
+                        src={featuredLayers[0].images?.find((i): i is string => Boolean(i)) ?? ''}
                         alt={featuredLayers[0].name}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  )}
+
+                  {/* Próxima imagem - DESLIZA por cima */}
+                  {featuredLayers[1] && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const img = featuredLayers[1].images?.find((i): i is string => Boolean(i));
+                        if (img) openModal(featuredLayers[1], img);
+                      }}
+                      className="absolute inset-0 w-full h-full transition-transform duration-500 ease-in-out"
+                      style={{
+                        zIndex: 2,
+                        transform: isAnimating ? 'translateX(0)' : 'translateX(100%)'
+                      }}
+                    >
+                      <img
+                        src={featuredLayers[1].images?.find((i): i is string => Boolean(i)) ?? ''}
+                        alt={featuredLayers[1].name}
                         className="w-full h-full object-cover"
                       />
                     </button>
                   )}
                 </div>
 
-                {/* COLUNA 3: PRÓXIMAS IMAGENS (sem a ativa) */}
+                {/* COLUNA 3: FILA DE IMAGENS - próximas deslizam por cima */}
                 <div className="w-1/3 flex">
-                  {featuredLayers.slice(1).map((product) => {
+                  {featuredLayers.slice(1).map((product, idx) => {
                     const image = product.images?.find((img): img is string => Boolean(img));
+                    const nextProduct = featuredLayers[idx + 2];
+                    const nextImage = nextProduct?.images?.find((img): img is string => Boolean(img));
+
                     if (!image) return null;
 
                     return (
-                      <button
-                        key={`queue-${product.id}`}
-                        type="button"
-                        onClick={() => {
-                          const targetIndex = featuredDisplay.findIndex((p) => p.id === product.id);
-                          if (targetIndex >= 0) {
-                            setActiveFeaturedIndex(targetIndex);
-                          }
-                        }}
-                        className="flex-1 h-full relative"
-                      >
-                        <img
-                          src={image}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                        {/* 50% opacidade */}
-                        <div className="absolute inset-0 bg-black/50" />
-                      </button>
+                      <div key={`queue-${product.id}`} className="flex-1 h-full relative overflow-hidden">
+                        {/* Imagem atual - PARADA */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const targetIndex = featuredDisplay.findIndex((p) => p.id === product.id);
+                            if (targetIndex >= 0) {
+                              setActiveFeaturedIndex(targetIndex);
+                            }
+                          }}
+                          className="absolute inset-0 w-full h-full"
+                          style={{ zIndex: 1 }}
+                        >
+                          <img
+                            src={image}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/50" />
+                        </button>
+
+                        {/* Próxima imagem - DESLIZA por cima */}
+                        {nextImage && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const targetIndex = featuredDisplay.findIndex((p) => p.id === nextProduct.id);
+                              if (targetIndex >= 0) {
+                                setActiveFeaturedIndex(targetIndex);
+                              }
+                            }}
+                            className="absolute inset-0 w-full h-full transition-transform duration-500 ease-in-out"
+                            style={{
+                              zIndex: 2,
+                              transform: isAnimating ? 'translateX(0)' : 'translateX(100%)'
+                            }}
+                          >
+                            <img
+                              src={nextImage}
+                              alt={nextProduct.name}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/50" />
+                          </button>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
