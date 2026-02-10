@@ -86,205 +86,137 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
 
   return (
     <div className="animate-in fade-in duration-700">
-      {/* SEÇÃO DE DESTAQUES - NOVA ESTRUTURA */}
+      {/* SEÇÃO DE DESTAQUES - ESTRUTURA SIMPLES */}
       <section className="text-white" id="destaques">
-        {/* Topo azul sem separação branca */}
         <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[#2aa7df]">
           {hasFeatured ? (
-            <>
-              {/* Faixa de relevo - 360px altura */}
-              <div
-                className="relative w-full overflow-hidden bg-[#2aa7df]"
-                style={{
-                  height: '360px',
-                  boxShadow: '0 -10px 25px rgba(0,0,0,0.2), 0 16px 30px rgba(0,0,0,0.25)'
-                }}
-                onMouseEnter={() => setIsCarouselPaused(true)}
-                onMouseLeave={() => setIsCarouselPaused(false)}
-              >
-                {/* Container das 3 colunas */}
-                <div className="relative w-full h-full flex">
-                  {/* COLUNA ESQUERDA - Texto */}
-                  <div
-                    className="relative h-full flex flex-col justify-center items-end px-10 text-right"
-                    style={{
-                      width: '33.33%',
-                      clipPath: 'polygon(0 0, calc(100% - 96px) 0, 100% 100%, 0 100%)',
-                      WebkitClipPath: 'polygon(0 0, calc(100% - 96px) 0, 100% 100%, 0 100%)',
-                      zIndex: 10
-                    }}
-                  >
-                    <p className="absolute top-8 right-10 uppercase tracking-[0.4em] text-[10px] font-bold text-white/90">
-                      destaques
-                    </p>
+            <div
+              className="relative w-full h-[360px] bg-[#2aa7df]"
+              onMouseEnter={() => setIsCarouselPaused(true)}
+              onMouseLeave={() => setIsCarouselPaused(false)}
+            >
+              {/* 3 COLUNAS SIMPLES */}
+              <div className="flex h-full">
+                {/* COLUNA 1: TEXTO */}
+                <div className="w-1/3 flex flex-col justify-center items-end px-10 text-right">
+                  <p className="uppercase tracking-[0.4em] text-xs text-white/90 mb-6">destaques</p>
 
-                    {featuredDisplay[activeFeaturedIndex] && (
-                      <div className="flex flex-col items-end gap-3">
-                        {/* Preço */}
-                        <div className="flex flex-col items-end">
-                          {featuredDisplay[activeFeaturedIndex].isPromo &&
-                           featuredDisplay[activeFeaturedIndex].promoPrice ? (
-                            <>
-                              <span className="text-sm text-white/60 line-through">
-                                {formatCurrency(featuredDisplay[activeFeaturedIndex].price)}
-                              </span>
-                              <span className="text-4xl font-bold leading-none">
-                                {formatCurrency(featuredDisplay[activeFeaturedIndex].promoPrice)}
-                              </span>
-                            </>
-                          ) : (
-                            <span className="text-4xl font-bold leading-none">
+                  {featuredDisplay[activeFeaturedIndex] && (
+                    <div className="flex flex-col items-end gap-3">
+                      {/* Preço */}
+                      <div className="flex flex-col items-end">
+                        {featuredDisplay[activeFeaturedIndex].isPromo &&
+                         featuredDisplay[activeFeaturedIndex].promoPrice ? (
+                          <>
+                            <span className="text-sm text-white/60 line-through">
                               {formatCurrency(featuredDisplay[activeFeaturedIndex].price)}
                             </span>
-                          )}
-                        </div>
-
-                        {/* Nome do produto */}
-                        <span
-                          className="text-xl font-light tracking-[0.4em] text-white max-w-[280px]"
-                          style={{
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden'
-                          }}
-                        >
-                          {featuredDisplay[activeFeaturedIndex].name}
-                        </span>
-
-                        {/* Tamanhos (sem a palavra TAMANHOS) */}
-                        {featuredDisplay[activeFeaturedIndex].sizes.length > 0 && (
-                          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
-                            {featuredDisplay[activeFeaturedIndex].sizes.join(' . ')}
+                            <span className="text-4xl font-bold leading-none">
+                              {formatCurrency(featuredDisplay[activeFeaturedIndex].promoPrice)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-4xl font-bold leading-none">
+                            {formatCurrency(featuredDisplay[activeFeaturedIndex].price)}
                           </span>
                         )}
                       </div>
-                    )}
-                  </div>
 
-                  {/* COLUNA CENTRAL - Imagem Ativa */}
-                  <div
-                    className="relative h-full flex items-end justify-center"
-                    style={{
-                      width: '33.33%',
-                      zIndex: 30
-                    }}
-                  >
-                    {featuredDisplay[activeFeaturedIndex] && (
-                      <>
-                        {/* Imagem grande que vaza para cima */}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const activeImage = featuredDisplay[activeFeaturedIndex].images?.find(
-                              (img): img is string => Boolean(img)
-                            );
-                            if (activeImage) {
-                              openModal(featuredDisplay[activeFeaturedIndex], activeImage);
-                            }
-                          }}
-                          className="group absolute bottom-16"
-                          style={{
-                            width: '115%',
-                            height: 'calc(100% + 80px)',
-                            transform: 'translateY(-80px)'
-                          }}
-                        >
-                          <div
-                            className="relative h-full w-full overflow-hidden"
-                            style={{
-                              clipPath: 'polygon(12% 0, 88% 0, 100% 100%, 0 100%)',
-                              WebkitClipPath: 'polygon(12% 0, 88% 0, 100% 100%, 0 100%)'
+                      {/* Nome */}
+                      <span className="text-xl font-light tracking-[0.4em] text-white">
+                        {featuredDisplay[activeFeaturedIndex].name}
+                      </span>
+
+                      {/* Tamanhos */}
+                      {featuredDisplay[activeFeaturedIndex].sizes.length > 0 && (
+                        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
+                          {featuredDisplay[activeFeaturedIndex].sizes.join(' . ')}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* COLUNA 2: IMAGEM ATIVA */}
+                <div className="w-1/3 flex items-center justify-center">
+                  {featuredDisplay[activeFeaturedIndex] && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const activeImage = featuredDisplay[activeFeaturedIndex].images?.find(
+                          (img): img is string => Boolean(img)
+                        );
+                        if (activeImage) {
+                          openModal(featuredDisplay[activeFeaturedIndex], activeImage);
+                        }
+                      }}
+                      className="w-full h-full"
+                    >
+                      <img
+                        src={
+                          featuredDisplay[activeFeaturedIndex].images?.find(
+                            (img): img is string => Boolean(img)
+                          ) ?? ''
+                        }
+                        alt={featuredDisplay[activeFeaturedIndex].name}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  )}
+                </div>
+
+                {/* COLUNA 3: PRÓXIMAS IMAGENS (sem a ativa) */}
+                <div className="w-1/3 flex">
+                  {featuredDisplay.length > 1 &&
+                    featuredDisplay
+                      .slice(1)
+                      .map((product, index) => {
+                        const image = product.images?.find((img): img is string => Boolean(img));
+                        if (!image) return null;
+
+                        return (
+                          <button
+                            key={`${product.id}-next-${index}`}
+                            type="button"
+                            onClick={() => {
+                              const targetIndex = featuredDisplay.findIndex((p) => p.id === product.id);
+                              if (targetIndex >= 0) {
+                                setActiveFeaturedIndex(targetIndex);
+                              }
                             }}
+                            className="flex-1 h-full relative"
                           >
                             <img
-                              src={
-                                featuredDisplay[activeFeaturedIndex].images?.find(
-                                  (img): img is string => Boolean(img)
-                                ) ?? ''
-                              }
-                              alt={featuredDisplay[activeFeaturedIndex].name}
-                              className="h-full w-full object-cover shadow-[0_10px_30px_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.02]"
-                              loading="lazy"
+                              src={image}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
                             />
-                          </div>
-                        </button>
-
-                        {/* Dots do carrossel - dentro da faixa, abaixo da imagem */}
-                        {featuredDisplay.length > 1 && (
-                          <div className="relative z-40 flex items-center justify-center gap-2 pb-4">
-                            {featuredDisplay.map((product, index) => (
-                              <button
-                                key={`${product.id}-dot-${index}`}
-                                type="button"
-                                onClick={() => setActiveFeaturedIndex(index)}
-                                className={`h-[5px] skew-x-[-20deg] transition-all ${
-                                  index === activeFeaturedIndex
-                                    ? 'bg-white/80 w-[22px]'
-                                    : 'bg-white/25 hover:bg-white/40 w-4'
-                                }`}
-                                aria-label={`Ir para ${product.name}`}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-
-                  {/* COLUNA DIREITA - Fila horizontal de imagens */}
-                  <div
-                    className="relative h-full overflow-hidden"
-                    style={{
-                      width: '33.33%',
-                      clipPath: 'polygon(96px 0, 100% 0, 100% 100%, 0 100%)',
-                      WebkitClipPath: 'polygon(96px 0, 100% 0, 100% 100%, 0 100%)',
-                      zIndex: 10
-                    }}
-                  >
-                    {/* Container horizontal scrollável */}
-                    <div className="flex h-full">
-                      {featuredDisplay.length > 1 &&
-                        featuredDisplay
-                          .slice(1)
-                          .concat([featuredDisplay[0]])
-                          .map((product, index) => {
-                            const image = product.images?.find((img): img is string => Boolean(img));
-                            return (
-                              <button
-                                key={`${product.id}-queue-${index}`}
-                                type="button"
-                                onClick={() => {
-                                  const targetIndex = featuredDisplay.findIndex((p) => p.id === product.id);
-                                  if (targetIndex >= 0) {
-                                    setActiveFeaturedIndex(targetIndex);
-                                  }
-                                }}
-                                className="relative flex-shrink-0 h-full overflow-hidden"
-                                style={{
-                                  width: `${100 / Math.min(featuredDisplay.length, 3)}%`,
-                                  minWidth: '200px'
-                                }}
-                              >
-                                {image && (
-                                  <>
-                                    <img
-                                      src={image}
-                                      alt={product.name}
-                                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-                                      loading="lazy"
-                                    />
-                                    <span className="absolute inset-0 bg-black/40 hover:bg-black/20 transition-colors" />
-                                  </>
-                                )}
-                              </button>
-                            );
-                          })}
-                    </div>
-                  </div>
+                            {/* 50% opacidade */}
+                            <div className="absolute inset-0 bg-black/50" />
+                          </button>
+                        );
+                      })}
                 </div>
               </div>
-            </>
+
+              {/* Dots do carrossel */}
+              {featuredDisplay.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center justify-center gap-2">
+                  {featuredDisplay.map((product, index) => (
+                    <button
+                      key={`${product.id}-dot-${index}`}
+                      type="button"
+                      onClick={() => setActiveFeaturedIndex(index)}
+                      className={`h-1 transition-all ${
+                        index === activeFeaturedIndex
+                          ? 'bg-white w-6'
+                          : 'bg-white/50 hover:bg-white/70 w-4'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           ) : (
             <div className="px-6 py-10 text-white/80 text-sm">
               Marque itens como destaque no admin para exibir aqui.
