@@ -197,7 +197,8 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                       style={{
                         zIndex: 2,
                         transform: isAnimating ? 'translateX(0)' : 'translateX(100%)',
-                        transition: isAnimating ? 'transform 500ms ease-in-out' : 'none'
+                        transition: isAnimating ? 'transform 500ms ease-in-out' : 'none',
+                        transitionDelay: isAnimating ? '0ms' : '0ms'
                       }}
                     >
                       <img
@@ -254,7 +255,8 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                             style={{
                               zIndex: 2,
                               transform: isAnimating ? 'translateX(0)' : 'translateX(100%)',
-                              transition: isAnimating ? 'transform 500ms ease-in-out' : 'none'
+                              transition: isAnimating ? 'transform 500ms ease-in-out' : 'none',
+                              transitionDelay: isAnimating ? `${(idx + 1) * 150}ms` : '0ms'
                             }}
                           >
                             <img
