@@ -12,8 +12,7 @@ const Header: React.FC<HeaderProps> = ({ searchTerm, onSearchChange }) => {
     <header
       className="relative overflow-hidden bg-[#2aa7df] text-white"
       style={{
-        boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
-        zIndex: 50
+        boxShadow: '0 10px 25px rgba(0,0,0,0.2)'
       }}
     >
       <div className="container mx-auto px-6 py-10 relative z-10">
