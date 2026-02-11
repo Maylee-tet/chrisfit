@@ -138,7 +138,8 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                   transform: 'translateX(-50%)',
                   width: '223px',
                   height: '396px',
-                  zIndex: 100
+                  zIndex: 100,
+                  boxShadow: '-2px -4px 15px rgba(0,0,0,0.25), 4px 8px 35px rgba(0,0,0,0.4)'
                 }}
               >
                 {/* Imagem atual - PARADA (usa displayIndex) */}
