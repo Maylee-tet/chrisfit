@@ -132,13 +132,16 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
             >
               {/* 4 COLUNAS: 40% | 20% | 20% | 20% */}
               <div className="flex h-full">
-                {/* COLUNA 1: TEXTO - 40% */}
-                <div className="w-[40%] flex flex-col justify-center items-end px-10 text-right">
-                  <p className="uppercase tracking-[0.4em] text-xs text-white/90 mb-6">destaques</p>
+                {/* COLUNA 1: TEXTO - 40% dividida em 4 linhas */}
+                <div className="w-[40%] flex flex-col px-10">
+                  {/* LINHA 1: Destaques - 15% */}
+                  <div className="h-[15%] flex items-center justify-end text-right">
+                    <p className="uppercase tracking-[0.4em] text-xs text-white/90">destaques</p>
+                  </div>
 
-                  {featuredDisplay[activeFeaturedIndex] && (
-                    <div className="flex flex-col items-end gap-3 transition-opacity duration-500">
-                      {/* Preço */}
+                  {/* LINHA 2: Preço - 25% */}
+                  <div className="h-[25%] flex items-center justify-end text-right">
+                    {featuredDisplay[activeFeaturedIndex] && (
                       <div className="flex flex-col items-end">
                         {featuredDisplay[activeFeaturedIndex].isPromo &&
                          featuredDisplay[activeFeaturedIndex].promoPrice ? (
@@ -156,20 +159,26 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                           </span>
                         )}
                       </div>
+                    )}
+                  </div>
 
-                      {/* Nome */}
+                  {/* LINHA 3: Nome - 45% */}
+                  <div className="h-[45%] flex items-center justify-end text-right">
+                    {featuredDisplay[activeFeaturedIndex] && (
                       <span className="text-xl font-light tracking-[0.4em] text-white">
                         {featuredDisplay[activeFeaturedIndex].name}
                       </span>
+                    )}
+                  </div>
 
-                      {/* Tamanhos */}
-                      {featuredDisplay[activeFeaturedIndex].sizes.length > 0 && (
-                        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
-                          {featuredDisplay[activeFeaturedIndex].sizes.join(' . ')}
-                        </span>
-                      )}
-                    </div>
-                  )}
+                  {/* LINHA 4: Tamanhos - 15% */}
+                  <div className="h-[15%] flex items-center justify-end text-right">
+                    {featuredDisplay[activeFeaturedIndex] && featuredDisplay[activeFeaturedIndex].sizes.length > 0 && (
+                      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
+                        {featuredDisplay[activeFeaturedIndex].sizes.join(' . ')}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* COLUNA 2: IMAGEM ATIVA - 20% */}
