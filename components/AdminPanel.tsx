@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Product, ProductUpsertPayload } from '../types';
 import { Plus, Trash2, Camera, X, Edit2, LogIn, CheckCircle2, LogOut } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
+import { isVideoFile, validateVideoDuration } from '../lib/mediaUtils';
 
 interface AdminPanelProps {
   products: Product[];
@@ -234,9 +235,19 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
     return { images: nextImages, nextFiles: updatedFiles };
   };
 
-  const handleFileChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     if (!file) return;
+
+    // Validar duração do vídeo (máximo 30 segundos)
+    if (isVideoFile(file)) {
+      const validation = await validateVideoDuration(file, 30);
+      if (!validation.valid) {
+        alert(`❌ ${validation.message}\n\nPor favor, edite o vídeo para ter no máximo 30 segundos e tente novamente.`);
+        event.target.value = '';
+        return;
+      }
+    }
 
     setNewImages((prev) => {
       const next = [...prev];
