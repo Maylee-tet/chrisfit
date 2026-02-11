@@ -805,16 +805,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                           <span className={product.isActive === false ? 'opacity-50' : ''}>Promoção</span>
                         </label>
                       )}
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={product.isActive !== false}
-                          disabled={statusUpdatingId === product.id}
-                          onChange={() => handleActiveToggle(product)}
-                          className="h-4 w-4 border-gray-300 text-green-600 focus:ring-green-500"
-                        />
-                        Ativo
-                      </label>
                     </div>
                   </td>
                   <td className="px-8 py-4 text-sm font-medium text-gray-500">{product.sizes.join(', ')}</td>
@@ -845,7 +835,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                     </div>
                   </td>
                   <td className="px-8 py-4 text-right">
-                    <div className="flex justify-end space-x-2">
+                    <div className="flex justify-end items-center space-x-3">
                       <button
                         onClick={() => startEdit(product)}
                         disabled={product.isActive === false}
@@ -865,6 +855,16 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                       >
                         <Trash2 size={18} />
                       </button>
+                      <label className="flex items-center gap-2 text-[11px] text-gray-600">
+                        <input
+                          type="checkbox"
+                          checked={product.isActive !== false}
+                          disabled={statusUpdatingId === product.id}
+                          onChange={() => handleActiveToggle(product)}
+                          className="h-4 w-4 border-gray-300 text-green-600 focus:ring-green-500"
+                        />
+                        Ativo
+                      </label>
                     </div>
                   </td>
                 </tr>
