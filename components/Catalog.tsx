@@ -129,10 +129,10 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
               onMouseEnter={() => setIsCarouselPaused(true)}
               onMouseLeave={() => setIsCarouselPaused(false)}
             >
-              {/* 3 COLUNAS SIMPLES */}
+              {/* 4 COLUNAS: 40% | 20% | 20% | 20% */}
               <div className="flex h-full">
-                {/* COLUNA 1: TEXTO - sempre mostra info do item ativo */}
-                <div className="w-1/3 flex flex-col justify-center items-end px-10 text-right">
+                {/* COLUNA 1: TEXTO - 40% */}
+                <div className="w-[40%] flex flex-col justify-center items-end px-10 text-right">
                   <p className="uppercase tracking-[0.4em] text-xs text-white/90 mb-6">destaques</p>
 
                   {featuredDisplay[activeFeaturedIndex] && (
@@ -171,8 +171,8 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                   )}
                 </div>
 
-                {/* COLUNA 2: IMAGEM ATIVA - próxima desliza por cima */}
-                <div className="w-1/3 relative overflow-hidden">
+                {/* COLUNA 2: IMAGEM ATIVA - 20% */}
+                <div className="w-[20%] relative overflow-hidden">
                   {/* Imagem atual - PARADA (usa displayIndex, muda só após animação) */}
                   {featuredLayers[0] && (
                     <button
@@ -217,8 +217,8 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                   )}
                 </div>
 
-                {/* COLUNA 3: FILA DE IMAGENS - próximas deslizam por cima */}
-                <div className="w-1/3 flex">
+                {/* COLUNA 3: FILA DE IMAGENS - 20% (vertical) */}
+                <div className="w-[20%] flex flex-col">
                   {featuredLayers.slice(1).map((product, idx) => {
                     const image = product.images?.find((img): img is string => Boolean(img));
                     const nextProduct = nextLayers[idx + 1]; // Usa nextLayers para próximas
@@ -227,7 +227,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                     if (!image) return null;
 
                     return (
-                      <div key={`queue-${product.id}`} className="flex-1 h-full relative overflow-hidden">
+                      <div key={`queue-${product.id}`} className="flex-1 relative overflow-hidden">
                         {/* Imagem atual - PARADA (usa featuredLayers/displayIndex) */}
                         <button
                           type="button"
@@ -278,6 +278,9 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                     );
                   })}
                 </div>
+
+                {/* COLUNA 4: VAZIA - 20% */}
+                <div className="w-[20%]" />
               </div>
 
               {/* Dots do carrossel */}
