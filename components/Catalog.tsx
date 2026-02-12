@@ -14,7 +14,7 @@ interface CatalogProps {
 }
 
 const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTerm, onSearchChange }) => {
-  const [activeModal, setActiveModal] = useState<{ product: Product; image: string } | null>(null);
+  const [activeModal, setActiveModal] = useState<{ product: Product; image: string; initialImage: string } | null>(null);
 
   const filteredProducts = useMemo(
     () =>
@@ -118,7 +118,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
     .filter((entry) => Boolean(entry.image));
 
   const openModal = (product: Product, image: string) => {
-    setActiveModal({ product, image });
+    setActiveModal({ product, image, initialImage: image });
   };
 
   const closeModal = () => setActiveModal(null);
@@ -623,7 +623,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
               </button>
 
               {/* Conteúdo scrollável */}
-              <div className="flex-1 overflow-y-auto p-8 pt-16">
+              <div className="flex-1 overflow-y-auto p-8 pt-16 flex flex-col">
                 {/* Nome do produto */}
                 <div className="mb-4">
                   <h3 className="text-2xl font-semibold text-[#BA4680]">{activeModal.product.name}</h3>
@@ -648,12 +648,15 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                 {/* Espaço para futura descrição */}
                 {/* TODO: Adicionar campo de descrição aqui */}
 
-                {/* Observação - menor e acima do menu */}
+                {/* Espaçador que empurra conteúdo para baixo */}
+                <div className="flex-1" />
+
+                {/* Observação - no final */}
                 {activeModal.product.observation && (
                   <p className="text-xs text-[#BA4680]/70 mb-4">{activeModal.product.observation}</p>
                 )}
 
-                {/* Menu vertical de fotos/vídeos - menor altura */}
+                {/* Menu vertical de fotos/vídeos - no final acima do botão */}
                 {modalImages.length > 1 && (
                   <div className="flex flex-col gap-2 mb-4">
                     {modalImages.map((image, index) => {
@@ -662,7 +665,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                         <button
                           key={`${activeModal.product.id}-modal-thumb-${index}`}
                           type="button"
-                          onClick={() => setActiveModal({ product: activeModal.product, image })}
+                          onClick={() => setActiveModal({ product: activeModal.product, image, initialImage: activeModal.initialImage })}
                           className={`relative h-16 w-full rounded-lg overflow-hidden border-2 transition ${
                             image === activeModal.image
                               ? 'border-[#D05B92] ring-2 ring-[#D05B92]/40'
@@ -685,10 +688,8 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                     })}
                   </div>
                 )}
-              </div>
 
-              {/* Botão de pedido - sempre no mesmo lugar (bottom) */}
-              <div className="p-8 pt-0">
+                {/* Botão de pedido - no final */}
                 <a
                   href={getWhatsAppUrl(activeModal.product)}
                   target="_blank"
