@@ -450,9 +450,9 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
-        <div className="bg-white p-10 shadow-2xl border border-[#1e90c8]/10 w-full max-w-md text-center">
-          <div className="bg-[#1e90c8]/10 w-20 h-20 flex items-center justify-center mx-auto mb-6">
-            <LogIn className="text-[#1e90c8]" size={32} />
+        <div className="bg-white p-10 shadow-2xl border border-[#D05B92]/10 w-full max-w-md text-center">
+          <div className="bg-[#D05B92]/10 w-20 h-20 flex items-center justify-center mx-auto mb-6">
+            <LogIn className="text-[#D05B92]" size={32} />
           </div>
           <h2 className="text-3xl font-bold text-gray-800 mb-2 sport-font italic">Acesso Restrito</h2>
           <p className="text-gray-500 text-sm mb-8">Entre com seu usuário do Supabase para gerenciar.</p>
@@ -462,7 +462,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
               placeholder="Seu email..."
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full bg-gray-50 border-2 border-gray-100 py-4 px-6 outline-none focus:border-[#1e90c8] transition-all text-center"
+              className="w-full bg-gray-50 border-2 border-gray-100 py-4 px-6 outline-none focus:border-[#D05B92] transition-all text-center"
               autoFocus
             />
             <input 
@@ -470,12 +470,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
               placeholder="Sua senha..."
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full bg-gray-50 border-2 border-gray-100 py-4 px-6 outline-none focus:border-[#1e90c8] transition-all text-center"
+              className="w-full bg-gray-50 border-2 border-gray-100 py-4 px-6 outline-none focus:border-[#D05B92] transition-all text-center"
             />
             {authError && <p className="text-xs text-red-500">{authError}</p>}
             <button 
               type="submit"
-              className="w-full bg-[#1e90c8] text-white py-4 rounded-2xl font-bold shadow-xl hover:brightness-110 transition-all flex items-center justify-center space-x-2"
+              className="w-full bg-[#D05B92] text-white py-4 rounded-2xl font-bold shadow-xl hover:brightness-110 transition-all flex items-center justify-center space-x-2"
             >
               <span>Entrar no Dashboard</span>
             </button>
@@ -489,33 +489,33 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
     <div className="animate-in slide-in-from-bottom-4 duration-500">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-4xl font-black text-[#1e90c8] sport-font italic">Dashboard</h2>
+          <h2 className="text-4xl font-black text-[#D05B92] sport-font italic">Dashboard</h2>
           <p className="text-gray-500 text-sm font-medium">Gerenciamento de Produtos</p>
           <p className="text-[11px] uppercase tracking-[0.2em] text-gray-400 mt-2">Versão {ADMIN_VERSION}</p>
         </div>
         <div className="flex items-center space-x-3">
           <button
-            onClick={handleLogout}
-            className="px-4 py-3 rounded-full flex items-center space-x-2 bg-gray-100 text-gray-600 shadow-md hover:bg-gray-200 transition-all"
-          >
-            <LogOut size={18} />
-            <span className="font-bold sport-font">Sair</span>
-          </button>
-          <button 
             onClick={() => showAddForm ? cancelEdit() : setShowAddForm(true)}
             className={`px-6 py-3 rounded-full flex items-center space-x-2 shadow-lg transition-all ${
-              showAddForm ? 'bg-gray-200 text-gray-600' : 'bg-[#1e90c8] text-white hover:bg-[#187db0]'
+              showAddForm ? 'bg-gray-200 text-gray-600' : 'bg-[#D05B92] text-white hover:brightness-110'
             }`}
           >
             {showAddForm ? <X size={20} /> : <Plus size={20} />}
             <span className="font-bold sport-font">{showAddForm ? 'Fechar' : 'Novo Item'}</span>
           </button>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-3 rounded-full flex items-center space-x-2 bg-gray-100 text-gray-600 shadow-md hover:bg-gray-200 transition-all"
+          >
+            <LogOut size={18} />
+            <span className="font-bold sport-font">DESLOGAR</span>
+          </button>
         </div>
       </div>
 
       {showAddForm && (
-        <form onSubmit={handleSubmit} className="bg-white p-8 shadow-2xl mb-12 border border-[#1e90c8]/10 space-y-4 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-2 h-full bg-[#1e90c8]"></div>
+        <form onSubmit={handleSubmit} className="bg-white p-8 shadow-2xl mb-12 border border-[#D05B92]/10 space-y-4 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-2 h-full bg-[#D05B92]"></div>
           <h3 className="text-xl font-bold sport-font italic text-gray-800 flex items-center space-x-2">
             {editingId ? <Edit2 size={20} /> : <Plus size={20} />}
             <span>{editingId ? 'Editar Produto' : 'Cadastrar Novo Item'}</span>
@@ -525,12 +525,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
             <div className="space-y-2 md:col-span-3">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-400">Código</label>
               <input required type="text" value={formData.code} onChange={e => setFormData({...formData, code: e.target.value})}
-                className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#1e90c8]" placeholder="Ex: 01" />
+                className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#D05B92]" placeholder="Ex: 01" />
             </div>
             <div className="md:col-span-6 space-y-2">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-400">Nome do Produto</label>
               <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#1e90c8]" placeholder="Ex: Conjunto Fitness Premium" />
+                className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#D05B92]" placeholder="Ex: Conjunto Fitness Premium" />
             </div>
             <div className="space-y-2 md:col-span-3">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-400">Preço (R$)</label>
@@ -541,7 +541,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                 value={formData.price}
                 onChange={handlePriceChange}
                 onBlur={handlePriceBlur}
-                className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#1e90c8]"
+                className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#D05B92]"
                 placeholder="0,00"
               />
             </div>
@@ -553,7 +553,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                     type="checkbox"
                     checked={formData.isFeatured}
                     onChange={(event) => setFormData((prev) => ({ ...prev, isFeatured: event.target.checked }))}
-                    className="h-4 w-4 border-gray-300 text-[#1e90c8] focus:ring-[#1e90c8]"
+                    className="h-4 w-4 border-gray-300 text-[#D05B92] focus:ring-[#D05B92]"
                   />
                   Marcar como destaque
                 </label>
@@ -567,7 +567,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                         isPromo: event.target.checked
                       }))
                     }
-                    className="h-4 w-4 border-gray-300 text-[#1e90c8] focus:ring-[#1e90c8]"
+                    className="h-4 w-4 border-gray-300 text-[#D05B92] focus:ring-[#D05B92]"
                   />
                   Marcar como promoção
                 </label>
@@ -582,7 +582,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                     setFormData((prev) => ({ ...prev, promoPrice: sanitizePriceInput(event.target.value) }))
                   }
                   onBlur={handlePromoPriceBlur}
-                  className="w-full max-w-xs bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#1e90c8]"
+                  className="w-full max-w-xs bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#D05B92]"
                   placeholder="Preço promocional"
                 />
               )}
@@ -592,7 +592,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
               <textarea
                 value={formData.description}
                 onChange={e => setFormData({...formData, description: e.target.value})}
-                className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#1e90c8] min-h-[100px]"
+                className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#D05B92] min-h-[100px]"
                 placeholder="Descrição detalhada do produto..."
               />
             </div>
@@ -611,13 +611,13 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                         addSize(sizeInput);
                       }
                     }}
-                    className="flex-1 bg-gray-50 border border-gray-100 p-3 outline-none focus:border-[#1e90c8] text-sm"
+                    className="flex-1 bg-gray-50 border border-gray-100 p-3 outline-none focus:border-[#D05B92] text-sm"
                     placeholder="Tamanho"
                   />
                   <button
                     type="button"
                     onClick={() => addSize(sizeInput)}
-                    className="px-4 py-2 rounded-lg bg-[#1e90c8] text-white text-xs font-bold hover:brightness-110 transition-all whitespace-nowrap"
+                    className="px-4 py-2 rounded-lg bg-[#D05B92] text-white text-xs font-bold hover:brightness-110 transition-all whitespace-nowrap"
                   >
                     Adicionar
                   </button>
@@ -665,7 +665,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                     return (
                       <label
                         key={`image-input-${index}`}
-                        className="relative w-20 h-20 border-2 border-dashed border-gray-300 hover:border-[#1e90c8] cursor-pointer flex items-center justify-center bg-gray-50 transition-colors overflow-hidden"
+                        className="relative w-20 h-20 border-2 border-dashed border-gray-300 hover:border-[#D05B92] cursor-pointer flex items-center justify-center bg-gray-50 transition-colors overflow-hidden"
                       >
                         <input
                           type="file"
@@ -696,7 +696,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                               </>
                             ) : newImages[index] ? (
                               <>
-                                <div className="w-full h-full flex items-center justify-center bg-green-50 text-green-600 text-[10px] font-bold">
+                                <div className="w-full h-full flex items-center justify-center bg-pink-50 text-[#D05B92] text-[10px] font-bold">
                                   Novo
                                 </div>
                                 <button
@@ -734,7 +734,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                         name="featured-image"
                         checked={featuredImageIndex === index}
                         onChange={() => setFeaturedImageIndex(index)}
-                        className="h-4 w-4 text-[#1e90c8] focus:ring-[#1e90c8] cursor-pointer"
+                        className="h-4 w-4 text-[#D05B92] focus:ring-[#D05B92] cursor-pointer"
                       />
                     </div>
                   ))}
@@ -743,15 +743,15 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
 
               <p className="text-[11px] text-gray-400 mt-2">Máximo de {MAX_IMAGES} imagens. Espaços restantes: {remainingSlots}.</p>
             </div>
-            <div className="space-y-2 md:col-span-5">
+            <div className="space-y-2 md:col-span-12">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-400">Observações (opcional)</label>
               <textarea value={formData.observation} onChange={e => setFormData({...formData, observation: e.target.value})}
-                className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#1e90c8] min-h-[140px]" placeholder="Ex: Confirmar cores disponíveis..." />
+                className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#D05B92] min-h-[80px]" placeholder="Ex: Confirmar cores disponíveis..." />
             </div>
           </div>
           
           <div className="flex space-x-4">
-            <button type="submit" disabled={isSubmitting} className="flex-grow bg-[#1e90c8] text-white py-4 rounded-2xl font-bold shadow-xl hover:brightness-110 transition-all flex items-center justify-center space-x-2 disabled:opacity-60">
+            <button type="submit" disabled={isSubmitting} className="flex-grow bg-[#D05B92] text-white py-4 rounded-2xl font-bold shadow-xl hover:brightness-110 transition-all flex items-center justify-center space-x-2 disabled:opacity-60">
               <CheckCircle2 size={20} />
               <span className="sport-font">{isSubmitting ? 'Salvando...' : editingId ? 'Salvar Alterações' : 'Adicionar ao Catálogo'}</span>
             </button>
@@ -764,10 +764,10 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
         </form>
       )}
 
-      <div className="bg-white shadow-2xl overflow-hidden border border-[#1e90c8]/10">
+      <div className="bg-white shadow-2xl overflow-hidden border border-[#D05B92]/10">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-[#1e90c8]/5 text-[#1e90c8] font-bold uppercase text-[10px] tracking-[0.2em]">
+            <thead className="bg-[#D05B92]/5 text-[#D05B92] font-bold uppercase text-[10px] tracking-[0.2em]">
               <tr>
                 <th className="px-8 py-6">Visual</th>
                 <th className="px-8 py-6">Cód.</th>
@@ -801,7 +801,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                   </td>
                   <td className="px-8 py-4 font-mono text-sm font-bold text-gray-400">{product.code}</td>
                   <td className="px-8 py-4 font-bold text-gray-800 sport-font italic">{product.name}</td>
-                  <td className="px-8 py-4 text-[#1e90c8] font-black">
+                  <td className="px-8 py-4 text-[#D05B92] font-black">
                     R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </td>
                   <td className="px-8 py-4 text-xs text-gray-500">
@@ -812,19 +812,19 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                         </span>
                       )}
                       {product.isFeatured && (
-                        <span className="px-2 py-1 bg-[#1e90c8]/10 text-[#1e90c8] font-semibold">
+                        <span className="px-2 py-1 bg-[#D05B92]/10 text-[#D05B92] font-semibold">
                           Destaque
                         </span>
                       )}
                       {product.isPromo && (
-                        <span className="px-2 py-1 bg-green-100 text-green-700 font-semibold">
+                        <span className="px-2 py-1 bg-pink-100 text-[#BA4680] font-semibold">
                           Promoção
                         </span>
                       )}
                       {product.isActive !== false && !product.isFeatured && !product.isPromo && <span>—</span>}
                     </div>
                     {product.isPromo && product.promoPrice ? (
-                      <p className="text-[11px] text-green-700 font-semibold">
+                      <p className="text-[11px] text-[#BA4680] font-semibold">
                         R$ {product.promoPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                       </p>
                     ) : null}
@@ -835,7 +835,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                           checked={product.isFeatured}
                           disabled={statusUpdatingId === product.id || product.isActive === false}
                           onChange={() => handleStatusToggle(product, 'isFeatured')}
-                          className="h-4 w-4 border-gray-300 text-[#1e90c8] focus:ring-[#1e90c8] disabled:opacity-50"
+                          className="h-4 w-4 border-gray-300 text-[#D05B92] focus:ring-[#D05B92] disabled:opacity-50"
                         />
                         <span className={product.isActive === false ? 'opacity-50' : ''}>Destaque</span>
                       </label>
@@ -846,7 +846,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                             checked={product.isPromo}
                             disabled={statusUpdatingId === product.id || product.isActive === false}
                             onChange={() => handleStatusToggle(product, 'isPromo')}
-                            className="h-4 w-4 border-gray-300 text-[#1e90c8] focus:ring-[#1e90c8] disabled:opacity-50"
+                            className="h-4 w-4 border-gray-300 text-[#D05B92] focus:ring-[#D05B92] disabled:opacity-50"
                           />
                           <span className={product.isActive === false ? 'opacity-50' : ''}>Promoção</span>
                         </label>
@@ -907,7 +907,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                           checked={product.isActive !== false}
                           disabled={statusUpdatingId === product.id}
                           onChange={() => handleActiveToggle(product)}
-                          className="h-4 w-4 border-gray-300 text-green-600 focus:ring-green-500"
+                          className="h-4 w-4 border-gray-300 text-[#D05B92] focus:ring-[#D05B92]"
                         />
                         Ativo
                       </label>
