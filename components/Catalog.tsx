@@ -65,6 +65,21 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
   const floatingMediaContainerRef = useRef<HTMLDivElement | null>(null);
   const featuredTextColumnRef = useRef<HTMLDivElement | null>(null);
   const [forceMinimalFeaturedLayout, setForceMinimalFeaturedLayout] = useState(false);
+  const [floatingCenterX, setFloatingCenterX] = useState<number | null>(null);
+
+  const floatingWidth = 270.6;
+  const floatingSafeGap = 16;
+
+  const setFeaturedIndex = (index: number) => {
+    setActiveFeaturedIndex(index);
+
+    // Na primeira interação manual, aplica a troca imediatamente para não parecer travado.
+    if (!hasStartedCarousel) {
+      setDisplayIndex(index);
+      setHasStartedCarousel(true);
+      setIsAnimating(false);
+    }
+  };
 
   // Detecta mudança no índice e anima (mas não na primeira vez)
   useEffect(() => {
@@ -127,24 +142,32 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
 
       if (window.innerWidth < 768) {
         setForceMinimalFeaturedLayout(false);
+        setFloatingCenterX(null);
         return;
       }
 
-      const floatingRect = floatingMediaContainerRef.current?.getBoundingClientRect();
+      const containerRect = featuredLayoutContainerRef.current?.getBoundingClientRect();
       const textRect = featuredTextColumnRef.current?.getBoundingClientRect();
 
-      // Quando o desktop está oculto pelo fallback, os refs podem ficar sem dimensão.
-      // Nesses casos, mantém o estado atual para evitar oscilação/flicker.
-      if (!floatingRect || !textRect || floatingRect.width === 0 || textRect.width === 0) return;
+      if (!containerRect || containerRect.width === 0) return;
 
-      const isTouchingRightViewportEdge = floatingRect.right >= window.innerWidth - 2;
-      const overlapsTextColumn =
-        floatingRect.left < textRect.right &&
-        floatingRect.right > textRect.left &&
-        floatingRect.top < textRect.bottom &&
-        floatingRect.bottom > textRect.top;
+      const textRightInsideContainer =
+        textRect && textRect.width > 0
+          ? textRect.right - containerRect.left
+          : containerRect.width * 0.4;
 
-      const shouldUseMinimal = isTouchingRightViewportEdge && overlapsTextColumn;
+      const preferredCenter = containerRect.width * 0.5;
+      const minCenter = textRightInsideContainer + floatingSafeGap + floatingWidth / 2;
+      const maxCenter = containerRect.width - floatingSafeGap - floatingWidth / 2;
+      const hasRoomBeforeCollision = minCenter <= maxCenter;
+
+      const boundedCenter = hasRoomBeforeCollision
+        ? Math.max(Math.min(preferredCenter, maxCenter), minCenter)
+        : maxCenter;
+
+      setFloatingCenterX((current) => (current === boundedCenter ? current : boundedCenter));
+
+      const shouldUseMinimal = !hasRoomBeforeCollision;
       setForceMinimalFeaturedLayout((current) =>
         current === shouldUseMinimal ? current : shouldUseMinimal
       );
@@ -166,7 +189,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
       observer.disconnect();
       window.removeEventListener('resize', evaluateFeaturedLayout);
     };
-  }, []);
+  }, [floatingSafeGap, floatingWidth]);
 
   useEffect(() => {
     // Play nos vídeos ativos (displayIndex)
@@ -222,8 +245,9 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                 <button
                   type="button"
                   onClick={() => {
-                    const img = featuredDisplay[activeFeaturedIndex]?.images?.find((i): i is string => Boolean(i));
-                    if (img) openModal(featuredDisplay[activeFeaturedIndex], img);
+                    const activeProduct = featuredLayers[0] ?? featuredDisplay[activeFeaturedIndex];
+                    const img = activeProduct?.images?.find((i): i is string => Boolean(i));
+                    if (img && activeProduct) openModal(activeProduct, img);
                   }}
                   className="relative mx-auto h-[190px] w-[107px] overflow-hidden shadow-xl"
                 >
@@ -269,9 +293,9 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                 ref={floatingMediaContainerRef}
                 className="absolute bottom-0 overflow-hidden"
                 style={{
-                  left: '50%',
+                  left: floatingCenterX !== null ? `${floatingCenterX}px` : '50%',
                   transform: 'translateX(-50%) translateY(20px) rotate(4deg)',
-                  width: '270.6px',
+                  width: `${floatingWidth}px`,
                   height: '480.7px',
                   zIndex: 1100,
                   boxShadow: '-2px -4px 15px rgba(0,0,0,0.25), 4px 8px 35px rgba(0,0,0,0.4)'
@@ -505,7 +529,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                           onClick={() => {
                             const targetIndex = featuredDisplay.findIndex((p) => p.id === product.id);
                             if (targetIndex >= 0) {
-                              setActiveFeaturedIndex(targetIndex);
+                              setFeaturedIndex(targetIndex);
                             }
                           }}
                           className="absolute inset-0 w-full h-full"
@@ -538,7 +562,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                             onClick={() => {
                               const targetIndex = featuredDisplay.findIndex((p) => p.id === nextProduct.id);
                               if (targetIndex >= 0) {
-                                setActiveFeaturedIndex(targetIndex);
+                                setFeaturedIndex(targetIndex);
                               }
                             }}
                             className="absolute inset-0 w-full h-full"
@@ -582,7 +606,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                     <button
                       key={`${product.id}-dot-${index}`}
                       type="button"
-                      onClick={() => setActiveFeaturedIndex(index)}
+                      onClick={() => setFeaturedIndex(index)}
                       className={`h-1 transition-all duration-300 ${
                         index === activeFeaturedIndex
                           ? 'bg-white w-6'
