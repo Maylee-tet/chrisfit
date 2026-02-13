@@ -61,6 +61,8 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
   const floatingVideoRef = React.useRef<HTMLVideoElement | null>(null);
   const mainVideoRef = React.useRef<HTMLVideoElement | null>(null);
   const queueVideoRefs = React.useRef<(HTMLVideoElement | null)[]>([]);
+  const featuredLayoutContainerRef = useRef<HTMLDivElement | null>(null);
+  const [forceMinimalFeaturedLayout, setForceMinimalFeaturedLayout] = useState(false);
 
   // Detecta mudança no índice e anima (mas não na primeira vez)
   useEffect(() => {
@@ -118,6 +120,66 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
 
   // Controla play/pause dos vídeos no carousel featured
   useEffect(() => {
+    const evaluateFeaturedLayout = () => {
+      if (typeof window === 'undefined') return;
+
+      if (window.innerWidth < 768) {
+        setForceMinimalFeaturedLayout(false);
+        return;
+      }
+
+      const containerRect = featuredLayoutContainerRef.current?.getBoundingClientRect();
+
+      if (!containerRect) {
+        setForceMinimalFeaturedLayout(false);
+        return;
+      }
+
+      const floatingWidth = 270.6;
+      const floatingHeight = 480.7;
+      const floatingTranslateY = 20;
+      const floatingCenterX = containerRect.left + containerRect.width * 0.5;
+      const floatingRect = {
+        left: floatingCenterX - floatingWidth / 2,
+        right: floatingCenterX + floatingWidth / 2,
+        top: containerRect.bottom - floatingHeight + floatingTranslateY,
+        bottom: containerRect.bottom + floatingTranslateY
+      };
+
+      const textRect = {
+        left: containerRect.left,
+        right: containerRect.left + containerRect.width * 0.4,
+        top: containerRect.top,
+        bottom: containerRect.bottom
+      };
+
+      const isTouchingRightViewportEdge = floatingRect.right >= window.innerWidth - 2;
+      const overlapsTextColumn =
+        floatingRect.left < textRect.right &&
+        floatingRect.right > textRect.left &&
+        floatingRect.top < textRect.bottom &&
+        floatingRect.bottom > textRect.top;
+
+      setForceMinimalFeaturedLayout(isTouchingRightViewportEdge && overlapsTextColumn);
+    };
+
+    evaluateFeaturedLayout();
+
+    const observer = new ResizeObserver(() => {
+      evaluateFeaturedLayout();
+    });
+
+    if (featuredLayoutContainerRef.current) observer.observe(featuredLayoutContainerRef.current);
+
+    window.addEventListener('resize', evaluateFeaturedLayout);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', evaluateFeaturedLayout);
+    };
+  }, [activeFeaturedIndex, displayIndex, isAnimating]);
+
+  useEffect(() => {
     // Play nos vídeos ativos (displayIndex)
     if (floatingVideoRef.current && isVideoUrl(activeFeaturedImage)) {
       floatingVideoRef.current.play().catch(() => {});
@@ -159,6 +221,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
         <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[#BA4680]">
           {hasFeatured ? (
             <div
+              ref={featuredLayoutContainerRef}
               className="relative w-full h-[320px] md:h-[360px] bg-[#BA4680]"
               style={{
                 boxShadow: '0 -10px 25px rgba(0,0,0,0.3)'
@@ -166,7 +229,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
               onMouseEnter={() => setIsCarouselPaused(true)}
               onMouseLeave={() => setIsCarouselPaused(false)}
             >
-              <div className="md:hidden h-full p-5 flex flex-col justify-between">
+              <div className={`${forceMinimalFeaturedLayout ? 'block' : 'md:hidden'} h-full p-5 flex flex-col justify-between`}>
                 <button
                   type="button"
                   onClick={() => {
@@ -211,7 +274,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                 </div>
               </div>
 
-              <div className="hidden md:block h-full">
+              <div className={`${forceMinimalFeaturedLayout ? 'hidden' : 'hidden md:block'} h-full`}>
               {/* IMAGEM FLUTUANTE - sobre a faixa, alinhada à coluna 2 */}
               <div
                 className="absolute bottom-0 overflow-hidden"
