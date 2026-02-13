@@ -138,9 +138,13 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
       }
 
       const isTouchingRightViewportEdge = floatingRect.right >= window.innerWidth - 1;
-      const isAboveTextColumn = floatingRect.bottom <= textRect.top;
+      const overlapsTextColumn =
+        floatingRect.left < textRect.right &&
+        floatingRect.right > textRect.left &&
+        floatingRect.top < textRect.bottom &&
+        floatingRect.bottom > textRect.top;
 
-      setForceMinimalFeaturedLayout(isTouchingRightViewportEdge && isAboveTextColumn);
+      setForceMinimalFeaturedLayout(isTouchingRightViewportEdge || overlapsTextColumn);
     };
 
     evaluateFeaturedLayout();
