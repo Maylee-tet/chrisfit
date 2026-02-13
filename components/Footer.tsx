@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white/5 border border-white/10 p-5 backdrop-blur-md">
+          <div className="bg-[#f4fbff]/5 border border-white/10 p-5 backdrop-blur-md">
             <div className="flex items-center justify-center space-x-3 text-white mb-3">
               <CreditCard size={22} />
               <span className="font-bold sport-font tracking-wider text-base">Pagamento PIX</span>
