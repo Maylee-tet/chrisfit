@@ -645,8 +645,8 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                       onClick={() => setFeaturedIndex(index)}
                       className={`h-1 transition-all duration-300 ${
                         index === activeFeaturedIndex
-                          ? 'bg-white w-6'
-                          : 'bg-white/50 hover:bg-white/70 w-4'
+                          ? 'bg-[#f4fbff] w-6'
+                          : 'bg-[#f4fbff]/50 hover:bg-[#f4fbff]/70 w-4'
                       }`}
                     />
                   ))}
@@ -689,7 +689,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
               placeholder="Buscar no catálogo..."
               value={searchTerm}
               onChange={(event) => onSearchChange(event.target.value)}
-              className="w-full bg-white border border-[#D05B92]/30 focus:border-[#D05B92] outline-none rounded-full py-3 pl-12 pr-4 placeholder:text-gray-400 text-[#0f1c2e] shadow-sm transition-all"
+              className="w-full bg-[#f4fbff] border border-[#D05B92]/30 focus:border-[#D05B92] outline-none rounded-full py-3 pl-12 pr-4 placeholder:text-gray-400 text-[#0f1c2e] shadow-sm transition-all"
             />
           </div>
         </div>
@@ -704,7 +704,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
               id="sort-order"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value as 'code' | 'name' | 'recent' | 'promo')}
-              className="bg-white border border-[#D05B92]/30 text-[#BA4680] rounded-full px-4 py-2 text-sm font-semibold focus:outline-none focus:border-[#D05B92] cursor-pointer shadow-sm hover:shadow-md transition-all"
+              className="bg-[#f4fbff] border border-[#D05B92]/30 text-[#BA4680] rounded-full px-4 py-2 text-sm font-semibold focus:outline-none focus:border-[#D05B92] cursor-pointer shadow-sm hover:shadow-md transition-all"
             >
               <option value="code">Código</option>
               <option value="name">Nome</option>
@@ -715,11 +715,11 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
         </div>
 
         {isLoading ? (
-          <div className="bg-white/70 py-24 text-center border border-[#FFE8F5]">
+          <div className="bg-[#f4fbff]/70 py-24 text-center border border-[#FFE8F5]">
             <p className="text-[#D05B92] font-bold sport-font italic">Carregando catálogo...</p>
           </div>
         ) : error ? (
-          <div className="bg-white/70 py-24 text-center border border-red-200">
+          <div className="bg-[#f4fbff]/70 py-24 text-center border border-red-200">
             <p className="text-red-500 font-bold sport-font italic">Não foi possível carregar os produtos.</p>
             <p className="text-xs text-gray-400 mt-2">{error}</p>
           </div>
@@ -730,7 +730,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
             ))}
           </div>
         ) : (
-          <div className="bg-white/30 backdrop-blur-sm py-32 text-center border-2 border-dashed border-[#FFE8F5]">
+          <div className="bg-[#f4fbff]/30 backdrop-blur-sm py-32 text-center border-2 border-dashed border-[#FFE8F5]">
             <div className="max-w-xs mx-auto text-[#D05B92]/60">
               <p className="text-xl font-bold sport-font italic">Item não encontrado</p>
             </div>
