@@ -81,6 +81,17 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
     }
   };
 
+  const setFeaturedIndex = (index: number) => {
+    setActiveFeaturedIndex(index);
+
+    // Na primeira interação manual, aplica a troca imediatamente para não parecer travado.
+    if (!hasStartedCarousel) {
+      setDisplayIndex(index);
+      setHasStartedCarousel(true);
+      setIsAnimating(false);
+    }
+  };
+
   // Detecta mudança no índice e anima (mas não na primeira vez)
   useEffect(() => {
     if (!hasFeatured || featuredDisplay.length <= 1 || !hasStartedCarousel) return;
