@@ -269,7 +269,7 @@ const App: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Header searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
-      <main className="flex-grow bg-white">
+      <main className="flex-grow bg-[#f4fbff]">
         {viewMode === 'catalog' ? (
           <Catalog products={products} isLoading={isLoading} error={error} searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         ) : (

@@ -489,7 +489,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
-        <div className="bg-white p-10 shadow-2xl border border-[#D05B92]/10 w-full max-w-md text-center">
+        <div className="bg-[#f4fbff] p-10 shadow-2xl border border-[#D05B92]/10 w-full max-w-md text-center">
           <div className="bg-[#D05B92]/10 w-20 h-20 flex items-center justify-center mx-auto mb-6">
             <LogIn className="text-[#D05B92]" size={32} />
           </div>
@@ -553,7 +553,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
       </div>
 
       {showAddForm && (
-        <form onSubmit={handleSubmit} className="bg-white p-8 shadow-2xl mb-12 border border-[#D05B92]/10 space-y-4 relative overflow-hidden">
+        <form onSubmit={handleSubmit} className="bg-[#f4fbff] p-8 shadow-2xl mb-12 border border-[#D05B92]/10 space-y-4 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-2 h-full bg-[#D05B92]"></div>
           <h3 className="text-xl font-bold sport-font italic text-gray-800 flex items-center space-x-2">
             {editingId ? <Edit2 size={20} /> : <Plus size={20} />}
@@ -803,7 +803,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
         </form>
       )}
 
-      <div className="bg-white shadow-2xl overflow-hidden border border-[#D05B92]/10">
+      <div className="bg-[#f4fbff] shadow-2xl overflow-hidden border border-[#D05B92]/10">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-[#D05B92]/5 text-[#D05B92] font-bold uppercase text-[10px] tracking-[0.2em]">

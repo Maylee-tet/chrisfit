@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ searchTerm, onSearchChange }) => {
           <a
             href="https://wa.me/5511963554043"
             target="_blank"
-            className="h-12 w-12 shrink-0 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/20 transition-colors relative z-20"
+            className="h-12 w-12 shrink-0 rounded-full border border-white/40 flex items-center justify-center hover:bg-[#f4fbff]/20 transition-colors relative z-20"
             aria-label="Contato no WhatsApp"
           >
             <MessageCircle size={22} fill="white" />

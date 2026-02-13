@@ -30,7 +30,7 @@ class AppErrorBoundary extends React.Component<React.PropsWithChildren, AppError
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-[#f4fbff] flex items-center justify-center px-6 py-10">
-          <div className="max-w-xl w-full bg-white border border-[#D05B92]/20 shadow-lg p-6 text-center">
+          <div className="max-w-xl w-full bg-[#f4fbff] border border-[#D05B92]/20 shadow-lg p-6 text-center">
             <p className="text-xs uppercase tracking-[0.35em] text-[#D05B92] mb-3">erro de interface</p>
             <h1 className="text-2xl font-semibold text-[#0f1c2e] mb-3">Não foi possível renderizar a tela.</h1>
             <p className="text-sm text-[#0f1c2e]/70 mb-6">
