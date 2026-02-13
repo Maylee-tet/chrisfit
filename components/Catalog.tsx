@@ -81,17 +81,6 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
     }
   };
 
-  const setFeaturedIndex = (index: number) => {
-    setActiveFeaturedIndex(index);
-
-    // Na primeira interação manual, aplica a troca imediatamente para não parecer travado.
-    if (!hasStartedCarousel) {
-      setDisplayIndex(index);
-      setHasStartedCarousel(true);
-      setIsAnimating(false);
-    }
-  };
-
   // Detecta mudança no índice e anima (mas não na primeira vez)
   useEffect(() => {
     if (!hasFeatured || featuredDisplay.length <= 1 || !hasStartedCarousel) return;
@@ -153,30 +142,32 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
 
       if (window.innerWidth < 768) {
         setForceMinimalFeaturedLayout(false);
+        setFloatingCenterX(null);
         return;
       }
 
       const containerRect = featuredLayoutContainerRef.current?.getBoundingClientRect();
       const textRect = featuredTextColumnRef.current?.getBoundingClientRect();
 
-      // Quando o desktop está oculto pelo fallback, os refs podem ficar sem dimensão.
-      // Nesses casos, mantém o estado atual para evitar oscilação/flicker.
-      if (!containerRect || !textRect || containerRect.width === 0 || textRect.width === 0) return;
+      if (!containerRect || containerRect.width === 0) return;
 
-      const textRightInsideContainer = textRect.right - containerRect.left;
+      const textRightInsideContainer =
+        textRect && textRect.width > 0
+          ? textRect.right - containerRect.left
+          : containerRect.width * 0.4;
+
       const preferredCenter = containerRect.width * 0.5;
       const minCenter = textRightInsideContainer + floatingSafeGap + floatingWidth / 2;
       const maxCenter = containerRect.width - floatingSafeGap - floatingWidth / 2;
+      const hasRoomBeforeCollision = minCenter <= maxCenter;
 
-      const clampedCenter = Math.max(Math.min(preferredCenter, maxCenter), minCenter);
-      const boundedCenter = Number.isFinite(clampedCenter) ? clampedCenter : preferredCenter;
+      const boundedCenter = hasRoomBeforeCollision
+        ? Math.max(Math.min(preferredCenter, maxCenter), minCenter)
+        : maxCenter;
+
       setFloatingCenterX((current) => (current === boundedCenter ? current : boundedCenter));
 
-      const projectedLeft = boundedCenter - floatingWidth / 2;
-      const touchesRightEdge = boundedCenter >= maxCenter - 1;
-      const invadesTextColumn = projectedLeft < textRightInsideContainer;
-
-      const shouldUseMinimal = touchesRightEdge && invadesTextColumn;
+      const shouldUseMinimal = !hasRoomBeforeCollision;
       setForceMinimalFeaturedLayout((current) =>
         current === shouldUseMinimal ? current : shouldUseMinimal
       );
