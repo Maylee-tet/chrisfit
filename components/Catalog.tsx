@@ -93,6 +93,9 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
     if (!featuredDisplay.length) return [];
     return featuredDisplay.map((_, offset) => featuredDisplay[(activeFeaturedIndex + offset) % featuredDisplay.length]);
   }, [featuredDisplay, activeFeaturedIndex]);
+  const activeFeaturedImage = featuredLayers[0]?.images?.find(
+    (image): image is string => Boolean(image)
+  ) ?? null;
   // Geometria para 15° de inclinação
   // Para altura de 360px: offset = 360 * tan(15°) ≈ 96px
   // Em porcentagem da largura da coluna (~467px em tela 1400px): 96/467 ≈ 20.5%
@@ -116,13 +119,13 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
   // Controla play/pause dos vídeos no carousel featured
   useEffect(() => {
     // Play nos vídeos ativos (displayIndex)
-    if (floatingVideoRef.current && isVideoUrl(featuredLayers[0]?.images?.find((i): i is string => Boolean(i)) ?? null)) {
+    if (floatingVideoRef.current && isVideoUrl(activeFeaturedImage)) {
       floatingVideoRef.current.play().catch(() => {});
     }
-    if (mainVideoRef.current && isVideoUrl(featuredLayers[0]?.images?.find((i): i is string => Boolean(i)) ?? null)) {
+    if (mainVideoRef.current && isVideoUrl(activeFeaturedImage)) {
       mainVideoRef.current.play().catch(() => {});
     }
-  }, [displayIndex, featuredLayers]);
+  }, [activeFeaturedImage, displayIndex]);
 
   const sideImages = featuredLayers
     .slice(1)
@@ -156,13 +159,59 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
         <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[#BA4680]">
           {hasFeatured ? (
             <div
-              className="relative w-full h-[360px] bg-[#BA4680]"
+              className="relative w-full h-[320px] md:h-[360px] bg-[#BA4680]"
               style={{
                 boxShadow: '0 -10px 25px rgba(0,0,0,0.3)'
               }}
               onMouseEnter={() => setIsCarouselPaused(true)}
               onMouseLeave={() => setIsCarouselPaused(false)}
             >
+              <div className="md:hidden h-full p-5 flex flex-col justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const img = featuredDisplay[activeFeaturedIndex]?.images?.find((i): i is string => Boolean(i));
+                    if (img) openModal(featuredDisplay[activeFeaturedIndex], img);
+                  }}
+                  className="relative mx-auto h-[190px] w-[107px] overflow-hidden shadow-xl"
+                >
+                  {activeFeaturedImage && isVideoUrl(activeFeaturedImage) ? (
+                    <video
+                      src={activeFeaturedImage}
+                      className="h-full w-full object-cover"
+                      muted
+                      loop
+                      playsInline
+                      autoPlay
+                      preload="metadata"
+                    />
+                  ) : (
+                    <img
+                      src={activeFeaturedImage}
+                      alt={featuredDisplay[activeFeaturedIndex]?.name ?? 'Destaque'}
+                      className="h-full w-full object-cover"
+                    />
+                  )}
+                </button>
+
+                <div className="text-center text-white">
+                  <p className="uppercase tracking-[0.35em] text-[10px] text-white/85 mb-2">destaques</p>
+                  <h3 className="text-lg font-semibold leading-tight">
+                    {featuredDisplay[activeFeaturedIndex]?.name}
+                  </h3>
+                  <p className="text-2xl font-bold mt-2">
+                    {featuredDisplay[activeFeaturedIndex]
+                      ? formatCurrency(
+                          featuredDisplay[activeFeaturedIndex].isPromo && featuredDisplay[activeFeaturedIndex].promoPrice
+                            ? featuredDisplay[activeFeaturedIndex].promoPrice
+                            : featuredDisplay[activeFeaturedIndex].price
+                        )
+                      : ''}
+                  </p>
+                </div>
+              </div>
+
+              <div className="hidden md:block">
               {/* IMAGEM FLUTUANTE - sobre a faixa, alinhada à coluna 2 */}
               <div
                 className="absolute bottom-0 overflow-hidden"
@@ -501,6 +550,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                   zIndex: 1000
                 }}
               />
+              </div>
             </div>
           ) : (
             <div className="px-6 py-10 text-white/80 text-sm">
