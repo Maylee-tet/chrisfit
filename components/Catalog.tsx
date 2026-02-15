@@ -249,7 +249,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
           {hasFeatured ? (
             <div
               ref={featuredLayoutContainerRef}
-              className="relative w-full h-[720px] md:h-[360px] bg-[#BA4680] md:[box-shadow:0_-10px_25px_rgba(0,0,0,0.3)]"
+              className="relative w-full h-[612px] md:h-[360px] bg-[#BA4680] md:[box-shadow:0_-10px_25px_rgba(0,0,0,0.3)]"
               onMouseEnter={() => setIsCarouselPaused(true)}
               onMouseLeave={() => setIsCarouselPaused(false)}
             >
