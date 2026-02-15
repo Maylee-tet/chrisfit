@@ -249,7 +249,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
           {hasFeatured ? (
             <div
               ref={featuredLayoutContainerRef}
-              className="relative w-full h-[320px] md:h-[360px] bg-[#BA4680] md:[box-shadow:0_-10px_25px_rgba(0,0,0,0.3)]"
+              className="relative w-full h-[720px] md:h-[360px] bg-[#BA4680] md:[box-shadow:0_-10px_25px_rgba(0,0,0,0.3)]"
               onMouseEnter={() => setIsCarouselPaused(true)}
               onMouseLeave={() => setIsCarouselPaused(false)}
             >
@@ -285,7 +285,7 @@ const Catalog: React.FC<CatalogProps> = ({ products, isLoading, error, searchTer
                     const img = activeProduct?.images?.find((i): i is string => Boolean(i));
                     if (img && activeProduct) openModal(activeProduct, img);
                   }}
-                  className="relative z-10 mx-auto h-[190px] w-[107px] overflow-hidden shadow-xl"
+                  className="relative z-10 mx-auto h-[570px] w-[321px] md:h-[190px] md:w-[107px] overflow-hidden shadow-xl"
                 >
                   {activeFeaturedImage && isVideoUrl(activeFeaturedImage) ? (
                     <video
