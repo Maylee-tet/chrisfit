@@ -78,9 +78,6 @@ const Footer: React.FC = () => {
               </svg>
               <span className="sport-font tracking-wide text-lg">@chrisfit.princess</span>
             </a>
-            <div className="text-xs uppercase tracking-[0.3em] text-white/40 text-center md:text-right">
-              atendimento de segunda a sábado
-            </div>
           </div>
         </div>
       </div>
