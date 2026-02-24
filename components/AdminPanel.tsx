@@ -681,7 +681,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                 placeholder="Descrição detalhada do produto..."
               />
             </div>
-            <div className="space-y-2 md:col-span-5">
+            <div className="space-y-2 md:col-span-6">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-400">Tamanhos (P, M, G...)</label>
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2">
@@ -736,7 +736,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                 )}
               </div>
             </div>
-            <div className="space-y-2 md:col-span-12">
+            <div className="space-y-2 md:col-span-6">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-400">Cores do item</label>
               <div className="flex flex-wrap items-center gap-2">
                 <input
@@ -800,7 +800,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
                 <p className="text-[11px] text-gray-400">Sem cores definidas.</p>
               )}
             </div>
-            <div className="space-y-2 md:col-span-7">
+            <div className="space-y-2 md:col-span-8">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Imagens do Produto</label>
 
               {/* Linha 1: Label + 5 quadrados de upload */}
@@ -892,7 +892,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ products, isLoading, error, onA
 
               <p className="text-[11px] text-gray-400 mt-2">Máximo de {MAX_IMAGES} imagens. Espaços restantes: {remainingSlots}.</p>
             </div>
-            <div className="space-y-2 md:col-span-12">
+            <div className="space-y-2 md:col-span-4">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-400">Observações (opcional)</label>
               <textarea value={formData.observation} onChange={e => setFormData({...formData, observation: e.target.value})}
                 className="w-full bg-gray-50 border border-gray-100 p-4 outline-none focus:border-[#D05B92] min-h-[80px]" placeholder="Ex: Confirmar cores disponíveis..." />
