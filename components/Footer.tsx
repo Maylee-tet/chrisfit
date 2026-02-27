@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Phone, CreditCard, Copy, Check } from 'lucide-react';
+import { Phone, CreditCard, Copy, Check, Instagram } from 'lucide-react';
 
 interface FooterProps {
   isAdminView?: boolean;
@@ -139,6 +139,16 @@ const Footer: React.FC<FooterProps> = ({ isAdminView = false }) => {
             >
               <Phone size={22} fill="white" />
               <span className="sport-font tracking-wide text-lg">Enviar Mensagem</span>
+            </a>
+            <a
+              href="https://instagram.com/chrisfit.princess"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center space-x-3 bg-[#BA4680] text-white px-10 py-5 rounded-2xl font-bold hover:brightness-110 transition-all shadow-xl hover:shadow-[#BA4680]/20 border-2 border-white/20"
+              aria-label="Instagram Chris Fit"
+            >
+              <Instagram size={22} />
+              <span className="sport-font tracking-wide text-lg">@CHRISFIT.PRINCESS</span>
             </a>
             <div className="text-xs uppercase tracking-[0.3em] text-white/40 text-center md:text-right">
               atendimento de segunda a sábado
