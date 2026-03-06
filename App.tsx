@@ -43,7 +43,7 @@ const App: React.FC = () => {
     const { data, error: fetchError } = await supabase
       .from('products')
       .select(
-        'id, code, name, price, promo_price, is_promo, is_featured, is_active, sizes, colors, default_color, disabled_colors, observation, description, created_at, product_images ( url, position )'
+        'id, code, name, price, promo_price, is_promo, is_featured, is_active, sizes, colors, default_color, disabled_colors, observation, description, created_at, product_images ( url, position ), product_color_media ( color_hex, url, position )'
       )
       .order('created_at', { ascending: false });
 
